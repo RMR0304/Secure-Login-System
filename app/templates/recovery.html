@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Account Recovery{% endblock %}
+
+{% block content %}
+<div class="auth-card-wrapper">
+    <div class="card auth-card wide-card">
+        <div class="card-header">
+            <h2>Self-Service Account Recovery</h2>
+            <p class="subtitle">Regain access to your account via single-use authorization token.</p>
+        </div>
+
+        <div id="recovery-alert" class="alert-box alert-hidden" role="alert"></div>
+
+        <!-- Dev Token Simulated Notification Banner -->
+        <div id="dev-token-banner" class="dev-banner hidden">
+            <div class="dev-banner-header">
+                <span class="badge badge-warning">DEVELOPMENT / LOCAL TESTING ONLY</span>
+                <span class="text-small text-muted">Simulated Out-of-Band Delivery</span>
+            </div>
+            <p class="dev-banner-text">In production, this cryptographic token is transmitted through an authenticated email service. For this local cybersecurity practical assessment, copy the generated token below:</p>
+            <div class="token-copy-box">
+                <input type="text" id="dev-token-value" readonly class="font-mono">
+                <button type="button" id="copy-token-btn" class="btn btn-secondary btn-sm">Use Token in Step 2</button>
+            </div>
+        </div>
+
+        <!-- Step 1: Request Token -->
+        <div id="recovery-step-1" class="recovery-step">
+            <h3 class="step-title">Step 1: Request Single-Use Reset Token</h3>
+            <p class="text-muted text-small mb-3">Provide your registered Institutional Email or Student ID.</p>
+            
+            <form id="recovery-req-form" novalidate>
+                <div class="form-group">
+                    <label for="identifier">Email or Student ID</label>
+                    <input type="text" id="identifier" name="identifier" required placeholder="student@example.local or STU1001">
+                </div>
+                <button type="submit" id="request-token-btn" class="btn btn-primary btn-block">
+                    <span class="btn-text">Generate Recovery Token</span>
+                    <span class="spinner hidden"></span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Step 2: Reset Password -->
+        <div id="recovery-step-2" class="recovery-step mt-4">
+            <h3 class="step-title">Step 2: Reset Password with Authorization Token</h3>
+            <p class="text-muted text-small mb-3">Submit your valid single-use token and new password.</p>
+
+            <form id="recovery-reset-form" novalidate>
+                <div class="form-group">
+                    <label for="recovery-token">Recovery Token</label>
+                    <input type="text" id="recovery-token" name="token" required placeholder="Paste single-use token here" class="font-mono">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="rec-new-password">New Password</label>
+                        <div class="input-wrapper password-wrapper">
+                            <input type="password" id="rec-new-password" name="new_password" required placeholder="Minimum 12 characters" autocomplete="new-password">
+                            <button type="button" class="pwd-toggle" data-target="rec-new-password" aria-label="Toggle password visibility">
+                                <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group flex-1">
+                        <label for="rec-confirm-password">Confirm New Password</label>
+                        <div class="input-wrapper password-wrapper">
+                            <input type="password" id="rec-confirm-password" name="confirm_new_password" required placeholder="Re-type new password" autocomplete="new-password">
+                            <button type="button" class="pwd-toggle" data-target="rec-confirm-password" aria-label="Toggle password visibility">
+                                <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Policy Checklist -->
+                <div class="policy-card">
+                    <div class="policy-header">
+                        <span class="policy-title">Password Security Policy Checklist</span>
+                        <span id="rec-strength-label" class="badge badge-neutral">Awaiting input</span>
+                    </div>
+                    <div class="strength-bar-bg">
+                        <div id="rec-strength-bar-fill" class="strength-bar-fill strength-0"></div>
+                    </div>
+                    <ul class="policy-list">
+                        <li id="rec-req-len" class="policy-item"><span class="icon">&bull;</span> At least 12 characters</li>
+                        <li id="rec-req-upper" class="policy-item"><span class="icon">&bull;</span> Uppercase letter (A-Z)</li>
+                        <li id="rec-req-lower" class="policy-item"><span class="icon">&bull;</span> Lowercase letter (a-z)</li>
+                        <li id="rec-req-num" class="policy-item"><span class="icon">&bull;</span> Number (0-9)</li>
+                        <li id="rec-req-spec" class="policy-item"><span class="icon">&bull;</span> Special character (!@#$%^&*)</li>
+                        <li id="rec-req-match" class="policy-item"><span class="icon">&bull;</span> Passwords match</li>
+                    </ul>
+                </div>
+
+                <button type="submit" id="reset-pwd-submit-btn" class="btn btn-primary btn-block">
+                    <span class="btn-text">Reset Password & Unlock Account</span>
+                    <span class="spinner hidden"></span>
+                </button>
+            </form>
+        </div>
+
+        <div class="card-footer">
+            <p>Remembered your credentials? <a href="/login" class="text-link">Return to login</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

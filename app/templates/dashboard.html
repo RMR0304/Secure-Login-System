@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="dashboard-header">
+        <div class="welcome-box">
+            <h1>Welcome, {{ user.full_name }}</h1>
+            <p class="subtitle">Authenticated Session &bull; Secure Student Portal</p>
+        </div>
+        <div class="header-actions">
+            <a href="/change-password" class="btn btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-6 6l-3 3-2-2-4 4 2 2 4-4 2 2 3-3"></path><circle cx="7.5" cy="7.5" r="4.5"></circle></svg>
+                Change Password
+            </a>
+            <a href="/logout" class="btn btn-danger">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Student Credentials & Security Profile -->
+    <div class="grid-2-col">
+        <div class="card">
+            <div class="card-header border-bottom">
+                <h3>Student Profile Information</h3>
+                <span class="badge badge-success">ACTIVE</span>
+            </div>
+            <div class="profile-details">
+                <div class="detail-row">
+                    <span class="detail-label">Full Name</span>
+                    <span class="detail-value">{{ user.full_name }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Student ID</span>
+                    <span class="detail-value font-mono">{{ user.student_id }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Institutional Email</span>
+                    <span class="detail-value font-mono">{{ user.email }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Account Created</span>
+                    <span class="detail-value">{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') if user.created_at else 'N/A' }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Last Successful Login</span>
+                    <span class="detail-value">{{ user.last_login_at.strftime('%Y-%m-%d %H:%M:%S UTC') if user.last_login_at else 'First Session' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header border-bottom">
+                <h3>Cryptographic Storage Evidence</h3>
+                <span class="badge badge-accent">ARGON2ID</span>
+            </div>
+            <div class="profile-details">
+                <div class="detail-row">
+                    <span class="detail-label">Plaintext Password</span>
+                    <span class="detail-value text-red font-mono"><strong>[NEVER STORED]</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Derivation Algorithm</span>
+                    <span class="detail-value font-mono">Argon2id (RFC 9106)</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Salt Generation</span>
+                    <span class="detail-value">Dynamic 16-byte CSPRNG per user</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Password History Policy</span>
+                    <span class="detail-value font-mono">Last 3 Hashes Enforced</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Account Lockout Policy</span>
+                    <span class="detail-value">5 Failed Attempts &rarr; 15m Lock</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Events Timeline -->
+    <div class="card mt-4">
+        <div class="card-header border-bottom">
+            <h3>Recent Account Security Audit Trail</h3>
+            <span class="text-small text-muted">Zero credential leakage guaranteed</span>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp (UTC)</th>
+                        <th>Event Type</th>
+                        <th>Outcome</th>
+                        <th>IP Address</th>
+                        <th>Audit Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if recent_events %}
+                        {% for ev in recent_events %}
+                        <tr>
+                            <td class="font-mono text-small">{{ ev.event_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td><span class="event-tag">{{ ev.event_type }}</span></td>
+                            <td>
+                                {% if ev.success %}
+                                    <span class="badge badge-success">SUCCESS</span>
+                                {% else %}
+                                    <span class="badge badge-danger">FAILED</span>
+                                {% endif %}
+                            </td>
+                            <td class="font-mono text-small">{{ ev.ip_address or 'Localhost' }}</td>
+                            <td class="text-small text-muted">{{ ev.details or '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No audit events recorded yet.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
