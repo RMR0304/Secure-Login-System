@@ -302,31 +302,3 @@ Record #1:
 | **TC-04** | Reuse old password | Change rejected (400) because it matches history. | `test_tc04_and_tc13_password_history_last_three_enforcement` |
 | **TC-05** | Repeated failures | Account locked after 5 consecutive failures (423). | `test_tc05_repeated_failures_trigger_account_lockout` |
 
-Extended test cases TC-06 through TC-20 are documented in [`docs/testing.md`](file:///c:/Users/ASUS/OneDrive/Desktop/Coding/CyberSecurity/secure-password-storage/docs/testing.md).
-
----
-
-## 19. Evidence & Screenshot Checklist
-
-When completing the HCLTech practical evaluation report, capture the following 12 screenshots:
-
-- [ ] **SCREENSHOT 01:** Registration page displaying password policy requirements (`/register`).
-- [ ] **SCREENSHOT 02:** Successful login and redirection to dashboard (`/login` &rarr; `/dashboard`).
-- [ ] **SCREENSHOT 03:** Incorrect password rejected with generic error message.
-- [ ] **SCREENSHOT 04:** Masked output from `python scripts/inspect_db.py` showing `[NOT STORED]`.
-- [ ] **SCREENSHOT 05:** Database evidence showing two users with the same password having different hashes (TC-03).
-- [ ] **SCREENSHOT 06:** Password change rejected due to last-three history match (TC-04).
-- [ ] **SCREENSHOT 07:** Account locked out after 5 consecutive failed attempts (TC-05).
-- [ ] **SCREENSHOT 08:** Authenticated student dashboard displaying synthetic student profile (`/dashboard`).
-- [ ] **SCREENSHOT 09:** Successful logout action clearing active session.
-- [ ] **SCREENSHOT 10:** Attempt to access `/dashboard` after logout redirecting to `/login` (TC-15).
-- [ ] **SCREENSHOT 11:** Account recovery flow with development single-use token banner (`/recover`).
-- [ ] **SCREENSHOT 12:** Terminal output of `pytest -v` showing all test cases passing.
-
----
-
-## 20. Limitations & Future Improvements
-- **Production Email Delivery:** Replace the simulated recovery token banner with an authenticated SMTP or transactional email provider (e.g. Amazon SES, SendGrid).
-- **Multi-Factor Authentication (MFA):** Implement TOTP (RFC 6238) authenticator app support.
-- **WebAuthn / Passkeys:** Add FIDO2 passwordless authentication capabilities.
-- **Hardware Security Modules (HSM):** Integrate key derivation pepper stored inside a dedicated KMS or HSM.
